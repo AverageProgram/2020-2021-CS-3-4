@@ -1,24 +1,46 @@
+from settings import *
 import pygame as pg
 import sys
 from os import path
-from settings import *
 from sprites import *
 from tilemap import *
 
+class Wall(pg.sprite.Sprite):
+    def __init__(self, game, x, y):
+        self.groups = game.all_sprites, game.walls
+        pg.sprite.Sprite.__init__(self, self.groups)
+        self.game = game
+        self.image = game.wall_img
+        self.rect = self.image.get_rect()
+        self.x = x
+        self.y = y
+        self.rect.x = x * TILESIZE
+        self.rect.y = y * TILESIZE
+        
 class Game:
     def __init__(self):
-        pg.init()
+        pygame.init()
         self.screen = pg.display.set_mode((WIDTH, HEIGHT))
         pg.display.set_caption(TITLE)
         self.clock = pg.time.Clock()
         self.load_data()
 
+        
+        
     def load_data(self):
         game_folder = path.dirname(__file__)
         img_folder= path.join(game_folder, 'img')
+        #self.start_img = pygame.image.load(os.path.join(img_folder,'AnemoiaStart1.png')).convert()
         self.map = Map(path.join(game_folder, 'map2.txt'))
-        self.player_img = pg.image.load(path.join(img_folder, PLAYER_IMG)).convert_alpha()
+        self.player_imgdown = pg.image.load(path.join(img_folder, PLAYER_IMGDOWN)).convert_alpha()
+
+        #self.image = pg.image.load(path.join(img_folder, PLAYER_IMGDOWN)).convert_alpha()
+        
+        self.player_imgup = pg.image.load(path.join(img_folder, PLAYER_IMGUP)).convert_alpha()            
         self.wall_img = pg.image.load(path.join(img_folder, WALL_IMG)).convert_alpha()
+        self.start_img = pg.image.load(path.join(img_folder, "AnemoiaStart1.png")).convert_alpha()
+        self.start_img = pygame.transform.scale(self.start_img, (WIDTH, HEIGHT))
+        self.wall_img = pygame.transform.scale(self.wall_img, (TILESIZE, TILESIZE))
 
     def new(self):
         # initialize all variables and do all the setup for a new game
@@ -76,12 +98,24 @@ class Game:
         pass
 
     def show_go_screen(self):
-        pass
+        goscreen = True
+        self.screen.blit(self.start_img,(0,0))
+        pygame.display.flip()
+        
+        while goscreen:
+            self.clock.tick(FPS)
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                if event.type == pygame.KEYUP:
+                    goscreen = False
+        
 
 # create the game object
 g = Game()
 g.show_start_screen()
 while True:
     g.new()
-    g.run()
     g.show_go_screen()
+    g.run()

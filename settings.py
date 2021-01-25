@@ -1,3 +1,4 @@
+import os
 import pygame
 
 WHITE = (255, 255, 255)
@@ -19,12 +20,22 @@ TILESIZE = 32
 GRIDWIDTH = WIDTH / TILESIZE
 GRIDHEIGHT = HEIGHT / TILESIZE
 
+'''
+pygame.init()
+game_folder = os.path.dirname(__file__)
+img_folder = os.path.join(game_folder, "img")
+'''
+
 # Player settings
 PLAYER_SPEED = 300
-PLAYER_IMG = 'default(3).png'
+PLAYER_IMGDOWN = 'default(3)down.png'
+PLAYER_IMGUP = 'default(3)up.png'
 
 #wall settings
 WALL_IMG = 'wall2.png'
+
+#start sreen
+#START_IMG = pygame.image.load(os.path.join(img_folder,'AnemoiaStart1.png')).convert()
 
 #text function
 font_name = pygame.font.match_font('arial')
